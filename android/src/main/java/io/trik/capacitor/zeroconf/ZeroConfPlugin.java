@@ -114,17 +114,19 @@ public class ZeroConfPlugin extends Plugin {
                             status.put("action", action);
                             status.put("service", jsonifyService(service));
 
-                            call.setKeepAlive(true);
-                            call.resolve(status);
+                            // Emit discover event instead of resolving the call
+                            notifyListeners("discover", status);
                         }
                     );
                 } catch (IOException | RuntimeException e) {
                     call.reject("Error: " + e.getMessage());
+                    return;
                 }
             });
 
-        call.setKeepAlive(true);
-        call.resolve();
+        // Return a callback ID immediately
+        String callbackId = "watch_" + type + domain + "_" + System.currentTimeMillis();
+        call.resolve(callbackId);
     }
 
     @PluginMethod

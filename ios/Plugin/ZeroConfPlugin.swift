@@ -88,7 +88,6 @@ public class ZeroConfPlugin: CAPPlugin {
     }
 
     @objc func watch(_ call: CAPPluginCall) {
-        call.keepAlive = true
         let typeParam = call.getString("type")
         let domainParam = call.getString("domain")
 
@@ -111,13 +110,18 @@ public class ZeroConfPlugin: CAPPlugin {
                 return
             }
             if let unwrappedService: NetService = service {
-                call.resolve(["action": actionStr, "service": jsonifyService(unwrappedService)])
+                // Emit discover event instead of resolving the call
+                notifyListeners("discover", data: ["action": actionStr, "service": jsonifyService(unwrappedService)])
             }
         }
 
         DispatchQueue.main.async {
             self.implementation.watch(type: type, domain: domain, callback: callback)
         }
+
+        // Return a callback ID immediately
+        let callbackId = "watch_\(type)\(domain)_\(Date().timeIntervalSince1970)"
+        call.resolve(callbackId)
     }
 
     @objc func unwatch(_ call: CAPPluginCall) {

@@ -1,4 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
+import type { PluginListenerHandle } from '@capacitor/core';
 
 import type {
   CallbackID,
@@ -8,12 +9,19 @@ import type {
   ZeroConfUnwatchRequest,
   ZeroConfWatchCallback,
   ZeroConfWatchRequest,
+  ZeroConfWatchResult,
 } from './definitions';
 
 const errorString = 'The plugin is not available on this platform';
 const errorFn = Promise.reject(errorString);
 
 export class ZeroConfWeb extends WebPlugin implements ZeroConfPlugin {
+  addListener(
+    _eventName: 'discover',
+    _listenerFunc: (result: ZeroConfWatchResult) => void
+  ): Promise<PluginListenerHandle> {
+    return errorFn;
+  }
   getHostname(): Promise<{ hostname: string }> {
     return errorFn;
   }
