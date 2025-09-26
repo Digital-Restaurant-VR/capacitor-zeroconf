@@ -12,17 +12,32 @@ The has been ported from [Cordova ZeroConf Plugin](https://github.com/becvert/co
 
 ## Install
 
+Install directly from this GitHub repository to get the latest fixes:
+
 ```bash
-npm install capacitor-zeroconf
+npm install byrdsandbytes/capacitor-zeroconf
 npx cap sync
 ```
 
 or
 
 ```bash
-yarn add capacitor-zeroconf
+yarn add byrdsandbytes/capacitor-zeroconf
 yarn cap sync
 ```
+
+**Note:** If you get TypeScript errors like "Cannot find module 'capacitor-zeroconf'", this means the package wasn't built when installed from GitHub. You can either:
+
+1. **Recommended:** Install a specific release tag:
+   ```bash
+   npm install byrdsandbytes/capacitor-zeroconf#v4.0.0
+   ```
+
+2. **Or** manually build after installation:
+   ```bash
+   cd node_modules/capacitor-zeroconf
+   npm run build
+   ```
 
 ## API
 
