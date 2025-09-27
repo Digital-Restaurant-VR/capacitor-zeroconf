@@ -121,7 +121,7 @@ public class ZeroConfPlugin: CAPPlugin {
 
         // Return a callback ID immediately
         let callbackId = "watch_\(type)\(domain)_\(Date().timeIntervalSince1970)"
-        call.resolve(callbackId)
+        call.resolve(["callbackId": callbackId])
     }
 
     @objc func unwatch(_ call: CAPPluginCall) {
