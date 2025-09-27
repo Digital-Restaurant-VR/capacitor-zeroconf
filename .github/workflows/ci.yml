@@ -1,0 +1,37 @@
+name: Install Test
+
+on:
+  schedule:
+    # Test installation weekly to ensure it works from GitHub
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  install-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create test project
+      run: |
+        mkdir test-install
+        cd test-install
+        npm init -y
+        
+    - name: Test installation from GitHub
+      run: |
+        cd test-install
+        npm install byrdsandbytes/capacitor-zeroconf
+        
+    - name: Verify package can be imported
+      run: |
+        cd test-install
+        node -e "
+          try {
+            const { ZeroConf } = require('capacitor-zeroconf');
+            console.log('✅ Package imported successfully');
+            console.log('ZeroConf plugin:', typeof ZeroConf);
+          } catch (error) {
+            console.error('❌ Failed to import:', error.message);
+            process.exit(1);
+          }
+        "
