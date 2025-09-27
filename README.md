@@ -37,18 +37,6 @@ yarn add byrdsandbytes/capacitor-zeroconf
 yarn cap sync
 ```
 
-**Note:** If you get TypeScript errors like "Cannot find module 'capacitor-zeroconf'", this means the package wasn't built when installed from GitHub. You can either:
-
-1. **Recommended:** Install a specific release tag:
-   ```bash
-   npm install byrdsandbytes/capacitor-zeroconf#v7.0.0
-   ```
-
-2. **Or** manually build after installation:
-   ```bash
-   cd node_modules/capacitor-zeroconf
-   npm run build
-   ```
 
 ## Quick Start
 
@@ -334,7 +322,9 @@ Actions that can occur during service discovery
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### ZeroConfWatchCallback
