@@ -41,7 +41,7 @@ yarn cap sync
 
 1. **Recommended:** Install a specific release tag:
    ```bash
-   npm install byrdsandbytes/capacitor-zeroconf#v4.0.0
+   npm install byrdsandbytes/capacitor-zeroconf#v7.0.0
    ```
 
 2. **Or** manually build after installation:
