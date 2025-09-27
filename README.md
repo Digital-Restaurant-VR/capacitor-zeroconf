@@ -136,16 +136,20 @@ await ZeroConf.unregister({
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
+ZeroConf/Bonjour/mDNS service discovery and publishing plugin
+
 ### addListener('discover', ...)
 
 ```typescript
 addListener(eventName: 'discover', listenerFunc: (result: ZeroConfWatchResult) => void) => Promise<PluginListenerHandle>
 ```
 
-| Param              | Type                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'discover'</code>                                                                  |
-| **`listenerFunc`** | <code>(result: <a href="#zeroconfwatchresult">ZeroConfWatchResult</a>) =&gt; void</code> |
+Listen for service discovery events
+
+| Param              | Type                                                                                     | Description                              |
+| ------------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------- |
+| **`eventName`**    | <code>'discover'</code>                                                                  | - Must be 'discover'                     |
+| **`listenerFunc`** | <code>(result: <a href="#zeroconfwatchresult">ZeroConfWatchResult</a>) =&gt; void</code> | - Callback function for discovery events |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
@@ -158,6 +162,8 @@ addListener(eventName: 'discover', listenerFunc: (result: ZeroConfWatchResult) =
 getHostname() => Promise<{ hostname: string; }>
 ```
 
+Get the device hostname
+
 **Returns:** <code>Promise&lt;{ hostname: string; }&gt;</code>
 
 --------------------
@@ -169,9 +175,11 @@ getHostname() => Promise<{ hostname: string; }>
 register(request: ZeroConfRegisterRequest) => Promise<void>
 ```
 
-| Param         | Type                                                                        |
-| ------------- | --------------------------------------------------------------------------- |
-| **`request`** | <code><a href="#zeroconfregisterrequest">ZeroConfRegisterRequest</a></code> |
+Register/publish a service to make it discoverable
+
+| Param         | Type                                                                        | Description                    |
+| ------------- | --------------------------------------------------------------------------- | ------------------------------ |
+| **`request`** | <code><a href="#zeroconfregisterrequest">ZeroConfRegisterRequest</a></code> | - Service registration details |
 
 --------------------
 
@@ -182,9 +190,11 @@ register(request: ZeroConfRegisterRequest) => Promise<void>
 unregister(request: ZeroConfUnregisterRequest) => Promise<void>
 ```
 
-| Param         | Type                                                                            |
-| ------------- | ------------------------------------------------------------------------------- |
-| **`request`** | <code><a href="#zeroconfunregisterrequest">ZeroConfUnregisterRequest</a></code> |
+Unregister/unpublish a previously registered service
+
+| Param         | Type                                                                            | Description             |
+| ------------- | ------------------------------------------------------------------------------- | ----------------------- |
+| **`request`** | <code><a href="#zeroconfunregisterrequest">ZeroConfUnregisterRequest</a></code> | - Service to unregister |
 
 --------------------
 
@@ -195,6 +205,8 @@ unregister(request: ZeroConfUnregisterRequest) => Promise<void>
 stop() => Promise<void>
 ```
 
+Stop all service registration/publishing
+
 --------------------
 
 
@@ -204,10 +216,13 @@ stop() => Promise<void>
 watch(request: ZeroConfWatchRequest, callback?: ZeroConfWatchCallback | undefined) => Promise<CallbackID>
 ```
 
-| Param          | Type                                                                    |
-| -------------- | ----------------------------------------------------------------------- |
-| **`request`**  | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>   |
-| **`callback`** | <code><a href="#zeroconfwatchcallback">ZeroConfWatchCallback</a></code> |
+Start watching for services of a specific type
+Use addListener('discover', ...) to receive the discovered services
+
+| Param          | Type                                                                    | Description                                               |
+| -------------- | ----------------------------------------------------------------------- | --------------------------------------------------------- |
+| **`request`**  | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>   | - What services to watch for                              |
+| **`callback`** | <code><a href="#zeroconfwatchcallback">ZeroConfWatchCallback</a></code> | - Optional callback (deprecated, use addListener instead) |
 
 **Returns:** <code>Promise&lt;string&gt;</code>
 
@@ -220,9 +235,11 @@ watch(request: ZeroConfWatchRequest, callback?: ZeroConfWatchCallback | undefine
 unwatch(request: ZeroConfUnwatchRequest) => Promise<void>
 ```
 
-| Param         | Type                                                                  |
-| ------------- | --------------------------------------------------------------------- |
-| **`request`** | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code> |
+Stop watching for services
+
+| Param         | Type                                                                  | Description                      |
+| ------------- | --------------------------------------------------------------------- | -------------------------------- |
+| **`request`** | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code> | - What services to stop watching |
 
 --------------------
 
@@ -232,6 +249,8 @@ unwatch(request: ZeroConfUnwatchRequest) => Promise<void>
 ```typescript
 close() => Promise<void>
 ```
+
+Close all operations and cleanup resources
 
 --------------------
 
@@ -246,67 +265,96 @@ close() => Promise<void>
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
+#### ZeroConfWatchResult
+
+Result of a service discovery event
+
+| Prop          | Type                                                                | Description                   |
+| ------------- | ------------------------------------------------------------------- | ----------------------------- |
+| **`action`**  | <code><a href="#zeroconfwatchaction">ZeroConfWatchAction</a></code> | What happened to the service  |
+| **`service`** | <code><a href="#zeroconfservice">ZeroConfService</a></code>         | The service that was affected |
+
+
 #### ZeroConfService
 
-| Prop                | Type                                    |
-| ------------------- | --------------------------------------- |
-| **`domain`**        | <code>string</code>                     |
-| **`type`**          | <code>string</code>                     |
-| **`name`**          | <code>string</code>                     |
-| **`port`**          | <code>number</code>                     |
-| **`hostname`**      | <code>string</code>                     |
-| **`ipv4Addresses`** | <code>string[]</code>                   |
-| **`ipv6Addresses`** | <code>string[]</code>                   |
-| **`txtRecord`**     | <code>{ [key: string]: string; }</code> |
+Discovered service information
+
+| Prop                | Type                                                            | Description           |
+| ------------------- | --------------------------------------------------------------- | --------------------- |
+| **`domain`**        | <code>string</code>                                             | Domain of the service |
+| **`type`**          | <code>string</code>                                             | Service type          |
+| **`name`**          | <code>string</code>                                             | Service name          |
+| **`port`**          | <code>number</code>                                             | Port number           |
+| **`hostname`**      | <code>string</code>                                             | Hostname/FQDN         |
+| **`ipv4Addresses`** | <code>string[]</code>                                           | IPv4 addresses        |
+| **`ipv6Addresses`** | <code>string[]</code>                                           | IPv6 addresses        |
+| **`txtRecord`**     | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | TXT record data       |
 
 
 #### ZeroConfRegisterRequest
 
-| Prop        | Type                                    |
-| ----------- | --------------------------------------- |
-| **`port`**  | <code>number</code>                     |
-| **`props`** | <code>{ [key: string]: string; }</code> |
+Request to register/publish a service
+
+| Prop        | Type                                                            | Description                                    |
+| ----------- | --------------------------------------------------------------- | ---------------------------------------------- |
+| **`port`**  | <code>number</code>                                             | Port number the service is running on          |
+| **`props`** | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | Additional properties/metadata for the service |
 
 
 #### ZeroConfUnregisterRequest
 
-| Prop       | Type                |
-| ---------- | ------------------- |
-| **`name`** | <code>string</code> |
+Request to unregister a published service
+
+| Prop       | Type                | Description                       |
+| ---------- | ------------------- | --------------------------------- |
+| **`name`** | <code>string</code> | Name of the service to unregister |
 
 
 #### ZeroConfWatchRequest
 
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`type`**   | <code>string</code> |
-| **`domain`** | <code>string</code> |
+Request to watch for services of a specific type
+
+| Prop         | Type                | Description                                      |
+| ------------ | ------------------- | ------------------------------------------------ |
+| **`type`**   | <code>string</code> | Service type (e.g., '_http._tcp.', '_ssh._tcp.') |
+| **`domain`** | <code>string</code> | Domain to search in (typically 'local.')         |
 
 
 ### Type Aliases
 
 
-#### ZeroConfWatchResult
-
-<code>{ action: <a href="#zeroconfwatchaction">ZeroConfWatchAction</a>; service: <a href="#zeroconfservice">ZeroConfService</a>; }</code>
-
-
 #### ZeroConfWatchAction
+
+Actions that can occur during service discovery
 
 <code>'added' | 'removed' | 'resolved'</code>
 
 
+#### Record
+
+Construct a type with a set of properties K of type T
+
+<code>{ [P in K]: T; }</code>
+
+
 #### ZeroConfWatchCallback
+
+Callback function for service discovery events
 
 <code>(event: <a href="#zeroconfwatchresult">ZeroConfWatchResult</a>): void</code>
 
 
 #### CallbackID
 
+Unique identifier for a watch operation
+
 <code>string</code>
 
 
 #### ZeroConfUnwatchRequest
+
+Request to stop watching for services
+Same as <a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a>
 
 <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>
 

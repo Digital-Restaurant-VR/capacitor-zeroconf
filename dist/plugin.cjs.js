@@ -2,44 +2,71 @@
 
 var core = require('@capacitor/core');
 
+/**
+ * ZeroConf plugin instance
+ *
+ * Provides ZeroConf/Bonjour/mDNS service discovery and publishing capabilities
+ * across iOS, Android, and Electron platforms.
+ *
+ * @example
+ * ```typescript
+ * import { ZeroConf } from 'capacitor-zeroconf';
+ *
+ * // Listen for discovered services
+ * const listener = await ZeroConf.addListener('discover', (result) => {
+ *   console.log('Service discovered:', result.service.name);
+ * });
+ *
+ * // Start watching for HTTP services
+ * await ZeroConf.watch({
+ *   type: '_http._tcp.',
+ *   domain: 'local.'
+ * });
+ * ```
+ */
 const ZeroConf = core.registerPlugin('ZeroConf', {
     web: () => Promise.resolve().then(function () { return web; }).then((m) => new m.ZeroConfWeb()),
-    electron: () => window.CapacitorCustomPlatform.plugins.ZeroConf,
+    electron: () => {
+        var _a, _b;
+        const win = window;
+        return (_b = (_a = win.CapacitorCustomPlatform) === null || _a === void 0 ? void 0 : _a.plugins) === null || _b === void 0 ? void 0 : _b.ZeroConf;
+    },
 });
 
-const errorString = 'The plugin is not available on this platform';
-const errorFn = Promise.reject(errorString);
+/**
+ * Web implementation of ZeroConfPlugin.
+ *
+ * Note: ZeroConf/mDNS service discovery requires native platform capabilities
+ * and is not available in web browsers. All methods will reject with an error.
+ */
 class ZeroConfWeb extends core.WebPlugin {
-    addListener(_eventName, _listenerFunc) {
-        return errorFn;
+    constructor() {
+        super(...arguments);
+        this.notAvailableError = new Error('ZeroConf plugin is not available on web platform. Use iOS, Android, or Electron instead.');
     }
-    getHostname() {
-        return errorFn;
+    async addListener(_eventName, _listenerFunc) {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    register(_request) {
-        return errorFn;
+    async getHostname() {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    unregister(_request) {
-        return errorFn;
+    async register(_request) {
+        throw this.notAvailableError;
     }
-    stop() {
-        return errorFn;
+    async unregister(_request) {
+        throw this.notAvailableError;
     }
-    watch(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _request, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _callback) {
-        return errorFn;
+    async stop() {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    unwatch(_request) {
-        return errorFn;
+    async watch(_request, _callback) {
+        throw this.notAvailableError;
     }
-    close() {
-        return errorFn;
+    async unwatch(_request) {
+        throw this.notAvailableError;
+    }
+    async close() {
+        throw this.notAvailableError;
     }
 }
 

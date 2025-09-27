@@ -1,37 +1,38 @@
 import { WebPlugin } from '@capacitor/core';
-const errorString = 'The plugin is not available on this platform';
-const errorFn = Promise.reject(errorString);
+/**
+ * Web implementation of ZeroConfPlugin.
+ *
+ * Note: ZeroConf/mDNS service discovery requires native platform capabilities
+ * and is not available in web browsers. All methods will reject with an error.
+ */
 export class ZeroConfWeb extends WebPlugin {
-    addListener(_eventName, _listenerFunc) {
-        return errorFn;
+    constructor() {
+        super(...arguments);
+        this.notAvailableError = new Error('ZeroConf plugin is not available on web platform. Use iOS, Android, or Electron instead.');
     }
-    getHostname() {
-        return errorFn;
+    async addListener(_eventName, _listenerFunc) {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    register(_request) {
-        return errorFn;
+    async getHostname() {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    unregister(_request) {
-        return errorFn;
+    async register(_request) {
+        throw this.notAvailableError;
     }
-    stop() {
-        return errorFn;
+    async unregister(_request) {
+        throw this.notAvailableError;
     }
-    watch(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _request, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _callback) {
-        return errorFn;
+    async stop() {
+        throw this.notAvailableError;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    unwatch(_request) {
-        return errorFn;
+    async watch(_request, _callback) {
+        throw this.notAvailableError;
     }
-    close() {
-        return errorFn;
+    async unwatch(_request) {
+        throw this.notAvailableError;
+    }
+    async close() {
+        throw this.notAvailableError;
     }
 }
 //# sourceMappingURL=web.js.map

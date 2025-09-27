@@ -12,43 +12,52 @@ import type {
   ZeroConfWatchResult,
 } from './definitions';
 
-const errorString = 'The plugin is not available on this platform';
-const errorFn = Promise.reject(errorString);
-
+/**
+ * Web implementation of ZeroConfPlugin.
+ * 
+ * Note: ZeroConf/mDNS service discovery requires native platform capabilities
+ * and is not available in web browsers. All methods will reject with an error.
+ */
 export class ZeroConfWeb extends WebPlugin implements ZeroConfPlugin {
-  addListener(
+  private readonly notAvailableError = new Error(
+    'ZeroConf plugin is not available on web platform. Use iOS, Android, or Electron instead.'
+  );
+
+  async addListener(
     _eventName: 'discover',
     _listenerFunc: (result: ZeroConfWatchResult) => void
   ): Promise<PluginListenerHandle> {
-    return errorFn;
+    throw this.notAvailableError;
   }
-  getHostname(): Promise<{ hostname: string }> {
-    return errorFn;
+
+  async getHostname(): Promise<{ hostname: string }> {
+    throw this.notAvailableError;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  register(_request: ZeroConfRegisterRequest): Promise<void> {
-    return errorFn;
+
+  async register(_request: ZeroConfRegisterRequest): Promise<void> {
+    throw this.notAvailableError;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  unregister(_request: ZeroConfUnregisterRequest): Promise<void> {
-    return errorFn;
+
+  async unregister(_request: ZeroConfUnregisterRequest): Promise<void> {
+    throw this.notAvailableError;
   }
-  stop(): Promise<void> {
-    return errorFn;
+
+  async stop(): Promise<void> {
+    throw this.notAvailableError;
   }
-  watch(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async watch(
     _request: ZeroConfWatchRequest,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _callback: ZeroConfWatchCallback
+    _callback?: ZeroConfWatchCallback
   ): Promise<CallbackID> {
-    return errorFn;
+    throw this.notAvailableError;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  unwatch(_request: ZeroConfUnwatchRequest): Promise<void> {
-    return errorFn;
+
+  async unwatch(_request: ZeroConfUnwatchRequest): Promise<void> {
+    throw this.notAvailableError;
   }
-  close(): Promise<void> {
-    return errorFn;
+
+  async close(): Promise<void> {
+    throw this.notAvailableError;
   }
 }
