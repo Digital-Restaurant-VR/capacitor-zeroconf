@@ -325,7 +325,9 @@ This is a fork of the original [capacitor-zeroconf](https://github.com/trik/capa
 
 ## License
 
-MIT
+MIT License
+
+This project is licensed under the MIT License - the same license as the original [cordova-plugin-zeroconf](https://github.com/becvert/cordova-plugin-zeroconf) plugin.
 
 ## Credits
 
