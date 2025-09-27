@@ -1,14 +1,25 @@
 # capacitor-zeroconf
 
-Capacitor ZeroConf plugin
+A Capacitor plugin for ZeroConf/Bonjour/mDNS service discovery and publishing.
 
-This plugin allows you to browse and publish ZeroConf/Bonjour/mDNS services from applications developed using Ionic's Capacitor.
+## Features
 
-This is not a background service. When the cordova view is destroyed/terminated, publish and watch operations are stopped.
+- **Discover services** on your local network using mDNS/Bonjour
+- **Publish services** to make your app discoverable by other devices
+- **Cross-platform support** for iOS, Android, and Electron
+- **Event-driven architecture** with proper service discovery callbacks
+- **TypeScript support** with full type definitions
 
-Android, iOS and [Electron](https://github.com/capacitor-community/electron) platforms are supported.
+## Platform Support
 
-The has been ported from [Cordova ZeroConf Plugin](https://github.com/becvert/cordova-plugin-zeroconf).
+| Platform | Supported |
+|----------|-----------|
+| iOS      | ✅        |
+| Android  | ✅        |
+| Electron | ✅        |
+| Web      | ❌        |
+
+**Note:** This plugin requires native platform capabilities and does not work in web browsers. Service discovery and publishing operations are automatically stopped when the application is terminated or goes into the background.
 
 ## Install
 
@@ -38,6 +49,72 @@ yarn cap sync
    cd node_modules/capacitor-zeroconf
    npm run build
    ```
+
+## Quick Start
+
+### Discovering Services
+
+```typescript
+import { ZeroConf } from 'capacitor-zeroconf';
+
+// Set up listener for discovered services
+const listener = await ZeroConf.addListener('discover', (result) => {
+  console.log(`Service ${result.action}:`, result.service.name);
+  
+  if (result.action === 'resolved') {
+    console.log('Service details:', {
+      name: result.service.name,
+      host: result.service.hostname,
+      port: result.service.port,
+      addresses: result.service.ipv4Addresses
+    });
+  }
+});
+
+// Start watching for HTTP services
+await ZeroConf.watch({
+  type: '_http._tcp.',
+  domain: 'local.'
+});
+
+// Stop watching
+await ZeroConf.unwatch({
+  type: '_http._tcp.',
+  domain: 'local.'
+});
+
+// Clean up
+listener.remove();
+```
+
+### Publishing Services
+
+```typescript
+// Publish your app as a discoverable service
+await ZeroConf.register({
+  type: '_http._tcp.',
+  domain: 'local.',
+  name: 'My App',
+  port: 8080,
+  props: {
+    description: 'My awesome app',
+    version: '1.0.0'
+  }
+});
+
+// Stop publishing
+await ZeroConf.unregister({
+  type: '_http._tcp.',
+  domain: 'local.',
+  name: 'My App'
+});
+```
+
+## Important Notes
+
+⚠️ **Breaking Change Fix**: This fork fixes a critical issue where the `watch()` method only returned the first discovered service. The native implementations now properly emit all discovered services as events through the `addListener('discover', ...)` pattern.
+
+**Migration Guide**: If you were using the old version and only getting the first result, no code changes are needed - you'll now receive all discovered services as expected.
 
 ## API
 
@@ -234,3 +311,22 @@ close() => Promise<void>
 <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>
 
 </docgen-api>
+
+## Contributing
+
+This is a fork of the original [capacitor-zeroconf](https://github.com/trik/capacitor-zeroconf) plugin with critical bug fixes for service discovery. 
+
+### Recent Improvements
+
+- ✅ **Fixed service discovery**: All discovered services are now properly returned (not just the first one)
+- ✅ **Proper event emission**: Native implementations now use `notifyListeners()` correctly
+- ✅ **Better TypeScript support**: Improved type definitions and error handling
+- ✅ **Updated documentation**: Modern terminology and better examples
+
+## License
+
+MIT
+
+## Credits
+
+Originally ported from the [Cordova ZeroConf Plugin](https://github.com/becvert/cordova-plugin-zeroconf) and based on [capacitor-zeroconf](https://github.com/trik/capacitor-zeroconf) by Marco Marche.
