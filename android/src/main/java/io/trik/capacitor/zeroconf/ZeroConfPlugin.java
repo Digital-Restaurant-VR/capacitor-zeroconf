@@ -125,8 +125,8 @@ public class ZeroConfPlugin extends Plugin {
             });
 
         // Return a callback ID immediately
-        String callbackId = "watch_" + type + domain + "_" + System.currentTimeMillis();
-        call.resolve(callbackId);
+        //String callbackId = "watch_" + type + domain + "_" + System.currentTimeMillis();
+        call.resolve();
     }
 
     @PluginMethod
