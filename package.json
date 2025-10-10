@@ -1,6 +1,6 @@
 {
   "name": "capacitor-zeroconf",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "description": "Capacitor ZeroConf plugin",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -49,8 +49,7 @@
     "build-electron": "tsc --project electron/tsconfig.json && rollup -c electron/rollup.config.mjs && rimraf ./electron/build",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
-    "prepublishOnly": "yarn build",
-    "postinstall": "npm run build"
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@capacitor/android": "^7.0.0",
